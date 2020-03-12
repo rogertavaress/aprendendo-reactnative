@@ -1,16 +1,5 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-
-class App extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Olá Mundo!</Text>
-        <Text style={styles.text2}>Meu primeiro App react-native</Text>
-      </View>
-    );
-  }
-}
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,5 +18,14 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
 });
+
+function App() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.welcome}>Olá Mundo!</Text>
+      <Text style={styles.text2}>Meu primeiro App react-native.</Text>
+    </View>
+  );
+}
 
 export default App;
