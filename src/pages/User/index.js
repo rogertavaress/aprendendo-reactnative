@@ -26,6 +26,7 @@ export default class User extends Component {
   static propTypes = {
     navigation: PropTypes.shape({
       getParam: PropTypes.func,
+      navigate: PropTypes.func,
     }).isRequired,
   };
 
@@ -89,6 +90,12 @@ export default class User extends Component {
     });
   };
 
+  showRepository(repository) {
+    const { navigation } = this.props;
+
+    navigation.navigate('Repository', { repository });
+  }
+
   render() {
     const { navigation } = this.props;
     const { stars, loading, refreshing } = this.state;
@@ -113,7 +120,11 @@ export default class User extends Component {
             onRefresh={this.refreshList} // Função dispara quando o usuário arrasta a lista pra baixo
             refreshing={refreshing}
             renderItem={({ item }) => (
-              <Starred>
+              <Starred
+                onPress={() => {
+                  this.showRepository(item);
+                }}
+              >
                 <OwnerAvatar
                   source={{
                     uri: item.owner.avatar_url,
