@@ -32,19 +32,47 @@ export default class User extends Component {
   state = {
     stars: [],
     loading: true,
+    page: 1,
   };
 
   async componentDidMount() {
-    const { navigation } = this.props;
-    const user = navigation.getParam('user');
-
-    const response = await api.get(`/users/${user.login}/starred`);
+    const { data } = await this.loadList();
 
     this.setState({
-      stars: response.data,
+      stars: data,
       loading: false,
     });
   }
+
+  async loadList() {
+    const { page } = this.state;
+    const { navigation } = this.props;
+    const user = navigation.getParam('user');
+
+    const response = await api.get(`/users/${user.login}/starred`, {
+      params: {
+        per_page: 15,
+        page,
+      },
+    });
+
+    return response;
+  }
+
+  loadMore = async () => {
+    const { stars, page } = this.state;
+
+    await this.setState({
+      page: page + 1,
+    });
+
+    const { data } = await this.loadList();
+
+    this.setState({
+      stars: stars.concat(data),
+      loading: false,
+    });
+  };
 
   render() {
     const { navigation } = this.props;
@@ -59,16 +87,21 @@ export default class User extends Component {
           <Name>{user.name}</Name>
           <Bio>{user.bio}</Bio>
         </Header>
-
         {loading ? (
-          <ActivityIndicator size="large" color="#7159c1" />
+          <ActivityIndicator color="#7159c1" size="large" />
         ) : (
           <Stars
             data={stars}
             keyExtractor={star => String(star.id)}
+            onEndReachedThreshold={0.2}
+            onEndReached={this.loadMore}
             renderItem={({ item }) => (
               <Starred>
-                <OwnerAvatar source={{ uri: item.owner.avatar_url }} />
+                <OwnerAvatar
+                  source={{
+                    uri: item.owner.avatar_url,
+                  }}
+                />
                 <Info>
                   <Title>{item.name}</Title>
                   <Author>{item.owner.login}</Author>
