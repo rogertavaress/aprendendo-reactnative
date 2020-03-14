@@ -41,6 +41,7 @@ export default class User extends Component {
     this.setState({
       stars: data,
       loading: false,
+      refreshing: false,
     });
   }
 
@@ -51,7 +52,7 @@ export default class User extends Component {
 
     const response = await api.get(`/users/${user.login}/starred`, {
       params: {
-        per_page: 15,
+        per_page: 10,
         page,
       },
     });
@@ -74,9 +75,23 @@ export default class User extends Component {
     });
   };
 
+  refreshList = async () => {
+    await this.setState({
+      page: 1,
+      refreshing: true,
+    });
+
+    const { data } = await this.loadList();
+
+    this.setState({
+      stars: data,
+      refreshing: false,
+    });
+  };
+
   render() {
     const { navigation } = this.props;
-    const { stars, loading } = this.state;
+    const { stars, loading, refreshing } = this.state;
 
     const user = navigation.getParam('user');
 
@@ -95,6 +110,8 @@ export default class User extends Component {
             keyExtractor={star => String(star.id)}
             onEndReachedThreshold={0.2}
             onEndReached={this.loadMore}
+            onRefresh={this.refreshList} // Função dispara quando o usuário arrasta a lista pra baixo
+            refreshing={refreshing}
             renderItem={({ item }) => (
               <Starred>
                 <OwnerAvatar
