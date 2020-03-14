@@ -63,6 +63,7 @@ export const Bio = styled.Text.attrs({
   text-align: center;
 `;
 export const ProfileButton = styled(RectButton)`
+  flex: 1;
   margin-top: 10px;
   align-self: stretch;
   border-radius: 4px;
@@ -77,4 +78,20 @@ export const ProfileButtonText = styled.Text`
   font-weight: bold;
   color: #fff;
   text-transform: uppercase;
+`;
+export const RemoveProfileButton = styled(RectButton)`
+  margin-top: 10px;
+  align-self: stretch;
+  border-radius: 4px;
+  background: #c70000;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  width: 36px;
+  margin-left: 5px;
+  opacity: ${props => (props.loading ? 0.7 : 1)};
+`;
+
+export const SessionButtons = styled.View`
+  flex-direction: row;
 `;
